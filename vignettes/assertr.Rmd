@@ -31,7 +31,7 @@ vignette will use them to enhance clarity.
 
 ### concrete data errors
 
-Let’s say, for example, that the R’s built-in car dataset, `mtcars`, was not 
+Let’s say, for example, that R’s built-in car dataset, `mtcars`, was not 
 built-in but rather procured from an external source that was known for making
 errors in data entry or coding.
 
@@ -84,7 +84,7 @@ our.data %>%
 If we had done this, we would have caught this data error.
 
 The `verify` function takes a data frame (its first argument is provided by
-the `%>%` operator), and a logical (boolean) expression. Then, `verify`
+the `%>%` operator), and a logical (Boolean) expression. Then, `verify`
 evaluates that expression using the scope of the provided data frame. If any
 of the logical values of the expression's result are `FALSE`, `verify` will
 raise an error that terminates any further processing of the pipeline.
@@ -100,7 +100,7 @@ our.data %>%
 
 The `assert` function takes a data frame, a predicate function, and an arbitrary
 number of columns to apply the predicate function to. The predicate function
-(a function that returns a logical/boolean value) is then applied to every
+(a function that returns a logical/Boolean value) is then applied to every
 element of the columns selected, and will raise an error when if it finds 
 violations.
 
@@ -120,7 +120,7 @@ our.data %>%
 
 ### verify vs. assert
 
-The first noticable difference between `verify` and `assert` is that `verify`
+The first noticeable difference between `verify` and `assert` is that `verify`
 takes an expression, and `assert` takes a predicate and columns to apply it to.
 This might make the `verify` function look more elegant--but there's an
 important drawback. `verify` has to evaluate the entire expression first, and
@@ -256,8 +256,8 @@ mtcars %>%
   summarise(avg.mpg=mean(mpg))
 ```
 
-Notice what happens when we drop that z-score to 2 stardard deviations
-from the mean
+Notice what happens when we require that `mpg` be within 2 standard deviations
+of the mean:
 
 ```{r error=TRUE,  purl = FALSE}
 mtcars %>%
@@ -287,12 +287,11 @@ mtcars %>%
 Aces!
 
 I chose to use `within_n_sds` in this example because people are familiar
-z-scores. However, for most practical purposes, the related predicate generator
-`within_n_mads` is more useful.
+with z-scores. However, for most practical purposes, the related predicate generator `within_n_mads` is more useful.
 
 The problem with `within_n_sds` is the mean and standard deviation are so
 heavily influenced by outliers, their very presence will compromise attempts
-to identify them using these statistics. In contrast with `within_n_sds`, 
+to identify them using these statistics. In contrast, 
 `within_n_mads` uses the robust statistics, median and median absolute
 deviation, to identify potentially erroneous data points.
 
@@ -317,16 +316,16 @@ Tubular!
 
 ### row-wise assertions and row reduction functions
 
-As cool as it's been so far, this still isn't enough to consitute a complete
+As cool as it's been so far, this still isn't enough to constitute a complete
 grammar of data integrity checking. To see why, check out the following
 small example data set:
 
-```{r perl=FALSE}
+```{r purl=FALSE}
 example.data <- data.frame(x=c(8, 9, 6, 5, 9, 5, 6, 7,
-                             8, 9, 6, 5, 5, 6, 7),
-                         y=c(82, 91, 61, 49, 40, 49, 57,
-                             74, 78, 90, 61, 49, 51, 62, 68))
-(example.data)
+                               8, 9, 6, 5, 5, 6, 7),
+                           y=c(82, 91, 61, 49, 40, 49, 57,
+                               74, 78, 90, 61, 49, 51, 62, 68))
+example.data
 ```
 
 Can you spot the brazen outlier? You're certainly not going to find it by
@@ -340,11 +339,10 @@ mistake is by plotting the data set.
 plot(example.data$x, example.data$y, xlab="", ylab="")
 ```
 
-Ok, so all the `y`s are roughly 10 times the `x`s except the outlying data
+OK, so all the `y`s are roughly 10 times the `x`s except the outlying data
 point.
 
-The problem having to plot data sets to catch anomalies is that it is *really*
-hard to visualize 4-dimensions at once, and it is near impossible with
+The problem with having to plot data sets to catch anomalies is that it is *really* hard to visualize 4-dimensions at once, and it is near impossible with
 high-dimensional data.
 
 There's no way of catching this anomaly by looking at each individual
@@ -393,7 +391,7 @@ corresponding to its mahalanobis distance. (The whole data frame is used because
 we used the `everything()` selection function.) Then, `within_n_mads(3)` computes
 on that vector and returns a bounds checking predicate. The bounds checking predicate
 checks to see that all mahalanobis distances are within 3 median absolute deviations
-of each other. They are not, and the pipeline errors out.
+of their median. They are not, and the pipeline errors out.
 
 This is probably the most powerful construct in `assertr`--it can find a whole
 lot of nasty errors that would be very difficult to check for by hand.
@@ -409,7 +407,7 @@ head(iris)
 iris %>% maha_dist %>% hist(main="", xlab="")
 ```
 
-Looks ok, but what happens when we accidently enter a row as a different
+Looks OK, but what happens when we accidentally enter a row as a different
 species...
 
 ```{r purl=FALSE}
@@ -440,7 +438,7 @@ its usage of a row-reduce data frame.
 a predicate generator on the row-reduced data frame, it uses a regular-old
 predicate.
 
-For an example of a `assert_rows` use case, let's say that we got a data set
+For an example of an `assert_rows` use case, let's say that we got a data set
 (`another-dataset.csv`) from the web and we don't want to continue processing
 the data set if any row contains more than two missing values (NAs). You
 can use the row reduction function `num_row_NAs` to reduce all the rows into
@@ -456,7 +454,7 @@ read.csv("another-dataset.csv") %>%
 
 `assert_rows` can be used for anomaly detection as well. A future version of
 `assertr` may contain a cosine distance row reduction function. Since all
-cosine distances are contrained from -1 to 1, it is easy to use a non-dynamic
+cosine distances are constrained from -1 to 1, it is easy to use a non-dynamic
 predicate to disallow certain values.
 
 
@@ -477,7 +475,7 @@ This could be written thusly:
 
 ```{r purl = FALSE}
 mtcars %>%
-  verify(nrow(mtcars) > 10) %>%
+  verify(nrow(.) > 10) %>%
   verify(mpg > 0) %>%
   insist(within_n_sds(4), mpg) %>%
   assert(in_set(0,1), am, vs) %>%
@@ -491,7 +489,7 @@ make look much better by abstracting out all the assertions:
 ```{r purl = FALSE}
 
 check_me <- . %>%
-  verify(nrow(mtcars) > 10) %>%
+  verify(nrow(.) > 10) %>%
   verify(mpg > 0) %>%
   insist(within_n_sds(4), mpg) %>%
   assert(in_set(0,1), am, vs)
@@ -516,7 +514,7 @@ not code.)
 
 In an unsupervised "continuous integration" environment, you need a way to
 discover that the assertions failed. In CI-as-a-service in the software world, 
-failed automated checks often send an email of reporting the maintainer of a
+failed automated checks often send an email to the maintainer of a
 botched build; why not bring that functionality to `assertr`?!
 
 All assertion verbs in `assertr` support a custom error function. By default,
@@ -549,7 +547,7 @@ questionable_mtcars %>%
   # ...
 ```
 
-(this particular `send.mail` formulation will only for gmail receptients;
+(this particular `send.mail` formulation will only for gmail recipients;
 see the `mailR` documentation for more information)
 
 Now you'll get notified of any failed assertions via email. Groovy!
@@ -557,7 +555,7 @@ Now you'll get notified of any failed assertions via email. Groovy!
 
 ### advanced: creating your own predicate generators for `insist`
 
-`assertr` is build with robustness, correctness, and extensibility in mind.
+`assertr` is built with robustness, correctness, and extensibility in mind.
 Just like `assertr` makes it easy to create your own custom predicates, so
 too does this package make it easy to create your own custom predicate
 generators.
@@ -566,8 +564,7 @@ Okay... so its, perhaps, not _easy_ because predicate generators by nature
 are functions that return functions. But it's possible!
 
 Let's say you wanted to create a predicate generator that checks if all
-elements of a vector are within 3 times the vector's interquartile range from
-the median. We need to create a function that looks like this
+elements of a vector are within 3 IQRs of the median (IQR = interquartile range). We need to create a function that looks like this
 
 ```{r purl = FALSE}
 within_3_iqrs <- function(a_vector){

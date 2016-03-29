@@ -31,7 +31,7 @@ This package offers five assertion functions, `assert`, `verify`,
 `insist`, `assert_rows`, and `insist_rows`, that are designed to be used
 shortly after data-loading in an analysis pipeline...
 
-Let’s say, for example, that the R’s built-in car dataset, `mtcars`, was not 
+Let’s say, for example, that R’s built-in car dataset, `mtcars`, was not 
 built-in but rather procured from an external source that was known for making
 errors in data entry or coding. Pretend we wanted to find the average
 miles per gallon for each number of engine cylinders. We might want to first,
@@ -67,14 +67,14 @@ and the pipeline would have been terminated early.
 ### What does `assertr` give me?
 
 - `verify` - takes a data frame (its first argument is provided by
-the `%>%` operator above), and a logical (boolean) expression. Then, `verify`
+the `%>%` operator above), and a logical (Boolean) expression. Then, `verify`
 evaluates that expression using the scope of the provided data frame. If any
 of the logical values of the expression's result are `FALSE`, `verify` will
 raise an error that terminates any further processing of the pipeline.
 
 - `assert` - takes a data frame, a predicate function, and an arbitrary
 number of columns to apply the predicate function to. The predicate function
-(a function that returns a logical/boolean value) is then applied to every
+(a function that returns a logical/Boolean value) is then applied to every
 element of the columns selected, and will raise an error if it finds any
 violations. Internally, the `assert` function uses `dplyr`'s
 `select` function to extract the columns to test the predicate function on.
@@ -127,10 +127,8 @@ a member of the set supplied.
 and predicate generators designed to be used with the `insist` and `insist_rows`
 functions:
 
-- `within_n_sds` - used to dynamically create bounds to check vector elements with
-based on standard z-scores
-- `within_n_mads` - better method for dynamically creating bounds to check vector
-elements with based on 'robust' z-scores (using median absolute deviation)
+- `within_n_sds` - used to dynamically create bounds to check vector elements based on standard z-scores
+- `within_n_mads` - better method for dynamically creating bounds to check vector elements  based on 'robust' z-scores (using median absolute deviation)
 
 and the following row reduction functions designed to be used with `assert_rows`
 and `insist_rows`:
